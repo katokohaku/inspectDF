@@ -1,11 +1,16 @@
 Package: inspectDF
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Obtain inspect objects as data.frame from arules::inspect(rules)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Satoshi Kato
+Maintainer: Satoshi Kato <kato.satoshi.0@gmail.com>
+Description: Utilitiles for arules to apply analytics with arules in tidy-scheme.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports: 
+  dplyr,
+  magrittr,
+  tidyr,
+  arules
+RoxygenNote: 6.0.1
