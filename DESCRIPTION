@@ -12,5 +12,6 @@ Imports:
   dplyr,
   magrittr,
   tidyr,
-  arules
+  arules,
+  igraph
 RoxygenNote: 6.0.1
