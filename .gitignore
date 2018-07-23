@@ -5,6 +5,5 @@
 .Rbuildignore
 man/*
 *.html
-*.md
 *files/*
 NAMESPACE
