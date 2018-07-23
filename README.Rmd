@@ -2,10 +2,10 @@
 title: "inspectDF: R package for getting inspected rules as data.frame"
 author: Satoshi Kato (@katokohaku)
 output: 
-  md_document:
-    variant: markdown_github
   html_document:
     keep_md: yes
+  md_document:
+    variant: markdown_github
 ---
 
 ```{r setup, include=FALSE}

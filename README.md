@@ -1,14 +1,25 @@
-Overview
-========
+---
+title: "inspectDF: R package for getting inspected rules as data.frame"
+author: Satoshi Kato (@katokohaku)
+output: 
+  html_document:
+    keep_md: yes
+  md_document:
+    variant: markdown_github
+---
+
+
+
+# Overview
 
 Getting inspected rules as data.frame.
 
-example
--------
+## example
 
 Just use `inspectDF()` instead of `arules::inspect()` after doing `arules::apriori()`.
 
-``` r
+
+```r
 require(dplyr)
 require(arules)
 require(inspectDF)
@@ -24,7 +35,8 @@ glo.inspectDF  <- inspectDF(glo.apriori)
 
 **InspectDF** also provides a plot.igraph wrapper utility.
 
-``` r
+
+```r
 set.seed(0)
 glo.inspectDF %>% 
   arrange(support, confidence) %>%
@@ -32,11 +44,12 @@ glo.inspectDF %>%
   plotRuleGraph()
 ```
 
-![](README_files/figure-markdown_github/example.plot-1.png)
+![](README_files/figure-html/example.plot-1.png)<!-- -->
 
 After `arules::apriori()`, just use `inspectDF()` instead of `arules::inspect()`. InspectDF has a good affinity with tidy schemes, such as `dplyr::arrange()` or `dplyr::filter()`.
 
-``` r
+
+```r
 set.seed(0)
 glo.inspectDF  <- inspectDF(glo.apriori)
 glo.inspectDF %>% 
@@ -46,31 +59,32 @@ glo.inspectDF %>%
   knitr::kable()
 ```
 
-| rule     | LHS                                         | RHS               |    n|    support|  confidence|      lift|  count|
-|:---------|:--------------------------------------------|:------------------|----:|----------:|-----------:|---------:|------:|
-| Rule 412 | root vegetables,other vegetables,whole milk | frozen fish       |    3|  0.0010168|   0.0438596|  3.750954|     10|
-| Rule 413 | root vegetables,other vegetables,whole milk | frozen dessert    |    3|  0.0010168|   0.0438596|  4.069431|     10|
-| Rule 414 | root vegetables,other vegetables,whole milk | canned vegetables |    3|  0.0010168|   0.0438596|  4.069431|     10|
-| Rule 415 | root vegetables,other vegetables,whole milk | specialty cheese  |    3|  0.0010168|   0.0438596|  5.135234|     10|
-| Rule 554 | other vegetables,whole milk,rolls/buns      | hygiene articles  |    3|  0.0010168|   0.0568182|  1.724712|     10|
-| Rule 608 | tropical fruit,other vegetables,whole milk  | waffles           |    3|  0.0010168|   0.0595238|  1.548721|     10|
 
-Installation
-------------
+
+rule       LHS                                           RHS                   n     support   confidence       lift   count
+---------  --------------------------------------------  ------------------  ---  ----------  -----------  ---------  ------
+Rule 412   root vegetables,other vegetables,whole milk   frozen fish           3   0.0010168    0.0438596   3.750954      10
+Rule 413   root vegetables,other vegetables,whole milk   frozen dessert        3   0.0010168    0.0438596   4.069431      10
+Rule 414   root vegetables,other vegetables,whole milk   canned vegetables     3   0.0010168    0.0438596   4.069431      10
+Rule 415   root vegetables,other vegetables,whole milk   specialty cheese      3   0.0010168    0.0438596   5.135234      10
+Rule 554   other vegetables,whole milk,rolls/buns        hygiene articles      3   0.0010168    0.0568182   1.724712      10
+Rule 608   tropical fruit,other vegetables,whole milk    waffles               3   0.0010168    0.0595238   1.548721      10
+
+## Installation
 
 You can install the **inspectDF** package from [GitHub](https://github.com/katokohaku/inspectDF).
 
-``` r
+
+```r
 install.packages("devtools") # if you have not installed "devtools" package
 devtools::install_github("katokohaku/inspectDF")
 ```
 
 The source code for **inspectDF** package is available on GitHub at
 
--   <https://github.com/katokohaku/inspectDF>.
+- https://github.com/katokohaku/inspectDF.
 
-Motivation
-----------
+## Motivation
 
 Usually, we do `inspect()` to enumrate rules after `arules::apriori()`.
 
@@ -80,9 +94,10 @@ In addition, arules package privides several utilities such as sort(), subset() 
 
 ### Use case
 
-InspectDF has a good affinity with tidy schemes, such as `dplyr::arrange()` or `dplyr::filter()`. E.g. rules with specific item(s) can be extracted using
+InspectDF has a good affinity with tidy schemes, such as `dplyr::arrange()` or `dplyr::filter()`. E.g. rules with specific item(s) can be extracted using 
 
-``` r
+
+```r
 require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(LHS, pattern = "yogurt|sausage")) %>%
@@ -92,18 +107,21 @@ rules.lhs  <- glo.inspectDF %>%
 rules.lhs %>% knitr::kable()
 ```
 
-| rule      | LHS               | RHS                    |    n|    support|  confidence|       lift|  count|
-|:----------|:------------------|:-----------------------|----:|----------:|-----------:|----------:|------:|
-| Rule 97   | whole milk,yogurt | UHT-milk               |    2|  0.0010168|   0.0181488|  0.5425339|     10|
-| Rule 98   | whole milk,yogurt | red/blush wine         |    2|  0.0010168|   0.0181488|  0.9444108|     10|
-| Rule 99   | whole milk,yogurt | house keeping products |    2|  0.0010168|   0.0181488|  2.1767518|     10|
-| Rule 100  | whole milk,yogurt | liver loaf             |    2|  0.0010168|   0.0181488|  3.5698730|     10|
-| Rule 7175 | whole milk,yogurt | chewing gum            |    2|  0.0011185|   0.0199637|  0.9485170|     11|
-| Rule 7176 | whole milk,yogurt | cling film/bags        |    2|  0.0011185|   0.0199637|  1.7530626|     11|
 
+
+rule        LHS                 RHS                        n     support   confidence        lift   count
+----------  ------------------  -----------------------  ---  ----------  -----------  ----------  ------
+Rule 97     whole milk,yogurt   UHT-milk                   2   0.0010168    0.0181488   0.5425339      10
+Rule 98     whole milk,yogurt   red/blush wine             2   0.0010168    0.0181488   0.9444108      10
+Rule 99     whole milk,yogurt   house keeping products     2   0.0010168    0.0181488   2.1767518      10
+Rule 100    whole milk,yogurt   liver loaf                 2   0.0010168    0.0181488   3.5698730      10
+Rule 7175   whole milk,yogurt   chewing gum                2   0.0011185    0.0199637   0.9485170      11
+Rule 7176   whole milk,yogurt   cling film/bags            2   0.0011185    0.0199637   1.7530626      11
+ 
 By default, rule strings are split by separater `","`. But, items sometimes contain separater characters ***e.g. [IUPAC of DHA](https://pubchem.ncbi.nlm.nih.gov/compound/Docosahexaenoic_acid#section=IUPAC-Name)***. In such case, user can change rule-separater freely `sep = string`.
+ 
 
-``` r
+```r
 glo.apriori %>% 
   inspectDF(sep = "###") %>% 
   filter(n >3) %>% 
@@ -112,18 +130,21 @@ glo.apriori %>%
   knitr::kable()
 ```
 
-| rule      | LHS                                                               | RHS         |
-|:----------|:------------------------------------------------------------------|:------------|
-| Rule 1771 | root vegetables\#\#\#other vegetables\#\#\#whole milk\#\#\#yogurt | waffles     |
-| Rule 1776 | root vegetables\#\#\#other vegetables\#\#\#whole milk\#\#\#yogurt | sugar       |
-| Rule 1778 | root vegetables\#\#\#other vegetables\#\#\#whole milk\#\#\#yogurt | onions      |
-| Rule 1781 | root vegetables\#\#\#other vegetables\#\#\#whole milk\#\#\#yogurt | butter milk |
-| Rule 1824 | tropical fruit\#\#\#other vegetables\#\#\#whole milk\#\#\#yogurt  | margarine   |
-| Rule 1850 | tropical fruit\#\#\#other vegetables\#\#\#whole milk\#\#\#yogurt  | grapes      |
 
-Similar to original plot.rules with igraph in arules package, each rule size represents **support value**. This size can be adjusted by `adujust.support.size` in plot functions.
 
-``` r
+rule        LHS                                                        RHS         
+----------  ---------------------------------------------------------  ------------
+Rule 1771   root vegetables###other vegetables###whole milk###yogurt   waffles     
+Rule 1776   root vegetables###other vegetables###whole milk###yogurt   sugar       
+Rule 1778   root vegetables###other vegetables###whole milk###yogurt   onions      
+Rule 1781   root vegetables###other vegetables###whole milk###yogurt   butter milk 
+Rule 1824   tropical fruit###other vegetables###whole milk###yogurt    margarine   
+Rule 1850   tropical fruit###other vegetables###whole milk###yogurt    grapes      
+
+Similar to original plot.rules with igraph in arules package, each rule size represents **support value**. This size can be adjusted by `adujust.support.size` in plot functions. 
+
+
+```r
 require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(RHS, pattern = "yogurt")) %>%
@@ -139,8 +160,9 @@ rules.lhs %>% plotRuleGraph(label = "adjusted rule size",
                             adujust.support.size = 4000)
 ```
 
-![](README_files/figure-markdown_github/usecase.adjust.rule-1.png)
+![](README_files/figure-html/usecase.adjust.rule-1.png)<!-- -->
 
-``` r
+```r
 par(mfrow = c(1,1))
 ```
+

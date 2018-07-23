@@ -3,7 +3,4 @@
 .RData
 .Ruserdata
 .Rbuildignore
-man/*
-*.html
-*files/*
-NAMESPACE
+README.html
