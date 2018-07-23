@@ -1,5 +1,5 @@
 ---
-title: "inspectDF: R package for getting inspected rules as data.frame"
+title: inspectDF
 author: Satoshi Kato (@katokohaku)
 output: 
   html_document:
@@ -11,13 +11,14 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  comment = "#>",
   message = FALSE
 )
 ```
 
 ## Overview
 
-Getting inspected rules as data.frame.
+R package for getting inspected rules as data.frame.
 
 ## example
 
@@ -47,20 +48,11 @@ glo.inspectDF %>%
 
 ```
 
-After `arules::apriori()`, just use `inspectDF()` instead of `arules::inspect()`. InspectDF has a good affinity with tidy schemes, such as `dplyr::arrange()` or `dplyr::filter()`.
 
-```{r example.tidy}
-set.seed(0)
-glo.inspectDF  <- inspectDF(glo.apriori)
-glo.inspectDF %>% 
-  filter(n == 3) %>% 
-  arrange(support, confidence) %>%
-  head() %>% 
-  knitr::kable()
 
-```
+### Detail
 
-## Installation
+#### Installation
 
 You can install the **inspectDF** package from [GitHub](https://github.com/katokohaku/inspectDF).
 
@@ -69,21 +61,21 @@ install.packages("devtools") # if you have not installed "devtools" package
 devtools::install_github("katokohaku/inspectDF")
 ```
 
-The source code for **inspectDF** package is available on GitHub at
+The source code for **inspectDF** package is available at
 
 - https://github.com/katokohaku/inspectDF.
 
-## Motivation
+#### Motivation
 
 Usually, we do `inspect()` to enumrate rules after `arules::apriori()`.
 
-Of cource, we could get data.frame object as side effect of `cat()` in `inspect()`. However, it can't be done quietly. It is noisy when using in function ow with a lot of rules.
+Of cource, we could get data.frame object as side effect of `cat()` in `inspect()`. However, it can't be done quietly (**ALWAYS** show all on consol). It is noisy when using in function or inspect a lot of rules.
 
-In addition, arules package privides several utilities such as sort(), subset() and etc. But if rules were provided as data.frame, we can explore them as tidy data.
+#### Use case
 
-### Use case
+Arules package privides several utilities such as sort(), subset() and etc. But if rules were provided as data.frame, we can explore them as tidy data. **InspectDF** has a good affinity with tidy schemes, such as `dplyr::arrange()` or `dplyr::filter()` because this returns **only** data.frame.
 
-InspectDF has a good affinity with tidy schemes, such as `dplyr::arrange()` or `dplyr::filter()`. E.g. rules with specific item(s) can be extracted using 
+For example, rules with specific item(s) can be extracted using `stringr::str_detect()`
 
 ```{r usecase.filter}
 require(stringr)
@@ -94,19 +86,18 @@ rules.lhs  <- glo.inspectDF %>%
   head()
 rules.lhs %>% knitr::kable()
 ```
- 
+
 By default, rule strings are split by separater `","`. But, items sometimes contain separater characters ***e.g. [IUPAC of DHA](https://pubchem.ncbi.nlm.nih.gov/compound/Docosahexaenoic_acid#section=IUPAC-Name)***. In such case, user can change rule-separater freely `sep = string`.
  
 ```{r usecase.sep}
 glo.apriori %>% 
   inspectDF(sep = "###") %>% 
   filter(n >3) %>% 
-  select(1:3) %>% 
-  head() %>% 
-  knitr::kable()
+  select(2:3) %>% 
+  head()
 ```
 
-Similar to original plot.rules with igraph in arules package, each rule size represents **support value**. This size can be adjusted by `adujust.support.size` in plot functions. 
+Similar to original `plot.rules` with `igraph` in arules package, each rule size represents **support** value. This size can be adjusted by `adujust.support.size` in plot functions. 
 
 ```{r usecase.adjust.rule}
 require(stringr)
@@ -118,7 +109,7 @@ rules.lhs  <- glo.inspectDF %>%
 
 par(mfrow = c(1,2))
 set.seed(0)
-rules.lhs %>% plotRuleGraph(label = "default size")
+rules.lhs %>% plotRuleGraph(label = "default")
 set.seed(0)
 rules.lhs %>% plotRuleGraph(label = "adjusted rule size", 
                             adujust.support.size = 4000)
