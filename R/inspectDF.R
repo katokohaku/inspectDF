@@ -27,13 +27,13 @@ inspectDF <- function(rules, sep = ","){
   RHS = arules::labels(arules::rhs(rules), sep, "", "")
   quality = arules::quality(rules)
 
-  rules <- cbind(lhs, rhs, quality) %>%
+  rules <- cbind(LHS, RHS, quality) %>%
     dplyr::arrange(support, confidence, lift) %>%
     dplyr::mutate(rule = paste("Rule", dplyr::row_number()),
                   LHS = as.character(LHS),
-                  RHS = as.character(rhs)) %>%
-    dplyr::select(rule, LHS, RHS, dplyr::everything()) %>%
-    dplyr::select(-lhs, -rhs)
+                  RHS = as.character(RHS),
+                  n = stringr::str_count(LHS, pattern = sep) +1) %>%
+    dplyr::select(rule, LHS, RHS, n, dplyr::everything())
 
   return(rules)
 }
