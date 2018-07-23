@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 R package for getting inspected rules as data.frame.
 
-## example
+#### How to use
 
 Just use `inspectDF()` instead of `arules::inspect()` after doing `arules::apriori()`.
 
@@ -35,6 +35,7 @@ glo.apriori <- apriori(Groceries, parameter = params, control = list(verbose=FAL
 print(glo.apriori)
 
 glo.inspectDF  <- inspectDF(glo.apriori)
+glo.inspectDF %>% str
 ```
 
 **InspectDF** also provides a plot.igraph wrapper utility.
@@ -48,7 +49,7 @@ glo.inspectDF %>%
 
 ```
 
-
+***
 
 ### Detail
 
@@ -69,7 +70,15 @@ The source code for **inspectDF** package is available at
 
 Usually, we do `inspect()` to enumrate rules after `arules::apriori()`.
 
-Of cource, we could get data.frame object as side effect of `cat()` in `inspect()`. However, it can't be done quietly (**ALWAYS** show all on consol). It is noisy when using in function or inspect a lot of rules.
+Of cource, we could get data.frame object as side effect of `cat()` on the last line in `inspect()`. However, it can't be done quietly (*Always show all on consol*). It is noisy when especially `inspect()` a lot of rules or calling in other function.
+
+(**Don't run following codes with many rules**)
+```{r original.inspect}
+glo.inspect  <- glo.apriori %>% head(10) %>% inspect()
+glo.inspect %>% str
+```
+
+Therefore, this must be done invisibly.
 
 #### Use case
 

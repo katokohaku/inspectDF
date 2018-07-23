@@ -1,11 +1,12 @@
 # inspectDF
 Satoshi Kato (@katokohaku)
 
+
 ## Overview
 
 R package for getting inspected rules as data.frame.
 
-## example
+#### How to use
 
 Just use `inspectDF()` instead of `arules::inspect()` after doing `arules::apriori()`.
 
@@ -22,6 +23,16 @@ print(glo.apriori)
 #> set of 40943 rules
 
 glo.inspectDF  <- inspectDF(glo.apriori)
+glo.inspectDF %>% str
+#> 'data.frame':	40943 obs. of  8 variables:
+#>  $ rule      : chr  "Rule 1" "Rule 2" "Rule 3" "Rule 4" ...
+#>  $ LHS       : chr  "whole milk" "other vegetables" "other vegetables" "rolls/buns" ...
+#>  $ RHS       : chr  "sparkling wine" "artif. sweetener" "bathroom cleaner" "nuts/prunes" ...
+#>  $ n         : num  1 1 1 1 1 1 1 1 1 1 ...
+#>  $ support   : num  0.00102 0.00102 0.00102 0.00102 0.00102 ...
+#>  $ confidence: num  0.00398 0.00525 0.00525 0.00553 0.00583 ...
+#>  $ lift      : num  0.712 1.615 1.914 1.647 1.024 ...
+#>  $ count     : num  10 10 10 10 10 10 10 10 10 10 ...
 ```
 
 **InspectDF** also provides a plot.igraph wrapper utility.
@@ -37,7 +48,7 @@ glo.inspectDF %>%
 
 ![](README_files/figure-html/example.plot-1.png)<!-- -->
 
-
+***
 
 ### Detail
 
@@ -59,7 +70,46 @@ The source code for **inspectDF** package is available at
 
 Usually, we do `inspect()` to enumrate rules after `arules::apriori()`.
 
-Of cource, we could get data.frame object as side effect of `cat()` in `inspect()`. However, it can't be done quietly (**ALWAYS** show all on consol). It is noisy when using in function or inspect a lot of rules.
+Of cource, we could get data.frame object as side effect of `cat()` on the last line in `inspect()`. However, it can't be done quietly (*Always show all on consol*). It is noisy when especially `inspect()` a lot of rules or calling in other function.
+
+(**Don't run following codes with many rules**)
+
+```r
+glo.inspect  <- glo.apriori %>% head(10) %>% inspect()
+#>      lhs               rhs            support     confidence  lift    
+#> [1]  {honey}        => {whole milk}   0.001118454 0.733333333 2.870009
+#> [2]  {whole milk}   => {honey}        0.001118454 0.004377238 2.870009
+#> [3]  {soap}         => {whole milk}   0.001118454 0.423076923 1.655775
+#> [4]  {whole milk}   => {soap}         0.001118454 0.004377238 1.655775
+#> [5]  {tidbits}      => {soda}         0.001016777 0.434782609 2.493345
+#> [6]  {soda}         => {tidbits}      0.001016777 0.005830904 2.493345
+#> [7]  {tidbits}      => {rolls/buns}   0.001220132 0.521739130 2.836542
+#> [8]  {rolls/buns}   => {tidbits}      0.001220132 0.006633499 2.836542
+#> [9]  {cocoa drinks} => {whole milk}   0.001321810 0.590909091 2.312611
+#> [10] {whole milk}   => {cocoa drinks} 0.001321810 0.005173100 2.312611
+#>      count
+#> [1]  11   
+#> [2]  11   
+#> [3]  11   
+#> [4]  11   
+#> [5]  10   
+#> [6]  10   
+#> [7]  12   
+#> [8]  12   
+#> [9]  13   
+#> [10] 13
+glo.inspect %>% str
+#> 'data.frame':	10 obs. of  7 variables:
+#>  $ lhs       : Factor w/ 7 levels "{cocoa drinks}",..: 2 7 4 7 6 5 6 3 1 7
+#>  $           : Factor w/ 1 level "=>": 1 1 1 1 1 1 1 1 1 1
+#>  $ rhs       : Factor w/ 7 levels "{cocoa drinks}",..: 7 2 7 4 5 6 3 6 7 1
+#>  $ support   : num  0.00112 0.00112 0.00112 0.00112 0.00102 ...
+#>  $ confidence: num  0.73333 0.00438 0.42308 0.00438 0.43478 ...
+#>  $ lift      : num  2.87 2.87 1.66 1.66 2.49 ...
+#>  $ count     : num  11 11 11 11 10 10 12 12 13 13
+```
+
+Therefore, this must be done invisibly.
 
 #### Use case
 
