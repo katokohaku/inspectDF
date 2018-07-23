@@ -93,7 +93,6 @@ rules.lhs  <- glo.inspectDF %>%
   arrange(confidence, lift) %>%
   filter(n > 1) %>% 
   head()
-rules.lhs %>% knitr::kable()
 ```
 
 By default, rule strings are split by separater `","`. But, items sometimes contain separater characters ***e.g. [IUPAC of DHA](https://pubchem.ncbi.nlm.nih.gov/compound/Docosahexaenoic_acid#section=IUPAC-Name)***. In such case, user can change rule-separater freely `sep = string`.

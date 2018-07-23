@@ -2,6 +2,7 @@
 Satoshi Kato (@katokohaku)
 
 
+
 ## Overview
 
 R package for getting inspected rules as data.frame.
@@ -125,19 +126,7 @@ rules.lhs  <- glo.inspectDF %>%
   arrange(confidence, lift) %>%
   filter(n > 1) %>% 
   head()
-rules.lhs %>% knitr::kable()
 ```
-
-
-
-rule        LHS                 RHS                        n     support   confidence        lift   count
-----------  ------------------  -----------------------  ---  ----------  -----------  ----------  ------
-Rule 97     whole milk,yogurt   UHT-milk                   2   0.0010168    0.0181488   0.5425339      10
-Rule 98     whole milk,yogurt   red/blush wine             2   0.0010168    0.0181488   0.9444108      10
-Rule 99     whole milk,yogurt   house keeping products     2   0.0010168    0.0181488   2.1767518      10
-Rule 100    whole milk,yogurt   liver loaf                 2   0.0010168    0.0181488   3.5698730      10
-Rule 7175   whole milk,yogurt   chewing gum                2   0.0011185    0.0199637   0.9485170      11
-Rule 7176   whole milk,yogurt   cling film/bags            2   0.0011185    0.0199637   1.7530626      11
 
 By default, rule strings are split by separater `","`. But, items sometimes contain separater characters ***e.g. [IUPAC of DHA](https://pubchem.ncbi.nlm.nih.gov/compound/Docosahexaenoic_acid#section=IUPAC-Name)***. In such case, user can change rule-separater freely `sep = string`.
  
