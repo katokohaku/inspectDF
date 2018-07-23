@@ -9,7 +9,7 @@ R package for getting inspected rules as data.frame.
 
 #### How to use
 
-Just use `inspectDF()` instead of `arules::inspect()` after doing `arules::apriori()`.
+Just `inspectDF()` instead of `arules::inspect()` after `arules::apriori()`.
 
 
 ```r
@@ -49,9 +49,8 @@ glo.inspectDF %>%
 
 ![](README_files/figure-html/example.plot-1.png)<!-- -->
 
-***
 
-### Detail
+## Detail
 
 #### Installation
 
@@ -69,11 +68,11 @@ The source code for **inspectDF** package is available at
 
 #### Motivation
 
-Usually, we do `inspect()` to enumrate rules after `arules::apriori()`.
+Usually, we `arules::inspect()` to enumerate rules after `arules::apriori()`.
 
-Of cource, we could get data.frame object as side effect of `cat()` on the last line in `inspect()`. However, it can't be done quietly (*Always show all on consol*). It is noisy when especially `inspect()` a lot of rules or calling in other function.
+Of cource, we could get data.frame object as side effect of `cat()` on the last line in `inspect()`. However, it can't be done quietly (*Always show all on consol*). 
 
-(**Don't run following codes with many rules**)
+**!!Don't run following codes with many rules!!**
 
 ```r
 glo.inspect  <- glo.apriori %>% head(10) %>% inspect()
@@ -110,6 +109,7 @@ glo.inspect %>% str
 #>  $ count     : num  11 11 11 11 10 10 12 12 13 13
 ```
 
+It is noisy when especially `inspect()` a lot of rules or calling in other function.
 Therefore, this must be done invisibly.
 
 #### Use case
@@ -128,7 +128,7 @@ rules.lhs  <- glo.inspectDF %>%
   head()
 ```
 
-By default, rule strings are split by separater `","`. But, items sometimes contain separater characters ***e.g. [IUPAC of DHA](https://pubchem.ncbi.nlm.nih.gov/compound/Docosahexaenoic_acid#section=IUPAC-Name)***. In such case, user can change rule-separater freely `sep = string`.
+By default, rule strings are split by separater `","`. But, items sometimes contain separater characters e.g. **[IUPAC of DHA](https://pubchem.ncbi.nlm.nih.gov/compound/Docosahexaenoic_acid#section=IUPAC-Name)**. In such case, user can change rule-separater freely `sep = string`.
  
 
 ```r
