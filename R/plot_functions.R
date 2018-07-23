@@ -6,7 +6,7 @@
 #' @param cex  label size for ittem node.
 #' @param ...  arguments path to plot.igraph()
 #'
-#' export
+#' @export
 
 plotRuleGraph <- function(rules.data.frame, adujust.support.size=50, label="", cex=1.0, ...){
 
@@ -21,16 +21,21 @@ plotRuleGraph <- function(rules.data.frame, adujust.support.size=50, label="", c
 
 #' plot edge.data.frame with rules as graph.
 #'
-#' @param edges a data.frame for input to graph.data.frame.
+#' @param edges a data.frame to describe edges and nodes, for inputs to graph.data.frame.
+#' @param rules a data.frame to describe weights for edge.
 #' @param adujust.support.size  adujust.support.size
 #' @param label  labels for item node.
 #' @param cex  label size for ittem node.
 #' @param ...  arguments path to plot.igraph()
 #'
 #' @import igraph
+#' @importFrom grDevices colorRamp rgb
+#' @importFrom graphics legend par plot text
+#' @importFrom stats setNames
+#'
 #' @export
 
-plotEdgeWithRule <- function(edges, rules, adujust.support.size=50, label="", cex=1.0, ...){
+plotEdgeWithRule <- function(edges, rules, adujust.support.size=200, label="", cex=1.0, ...){
 
   if(NROW(edges) < 2){
     plot(0, type="n", bty="n", xaxt="n", yaxt="n", xlab="", ylab="")
@@ -46,25 +51,28 @@ plotEdgeWithRule <- function(edges, rules, adujust.support.size=50, label="", ce
 
   v_to_support_map <- setNames(rules$support * adujust.support.size, rules$rule)
   v_to_support <- function(name) {
-    if_else(name %in% names(v_to_support_map), v_to_support_map[name],0)
+    ifelse(name %in% names(v_to_support_map), v_to_support_map[name],0)
   }
 
   v_to_lift_map <- setNames(rules$lift, rules$rule)
   v_to_lift <- function(name) {
-    if_else(name %in% names(v_to_lift_map), v_to_lift_map[name],0)
+    ifelse(name %in% names(v_to_lift_map), v_to_lift_map[name],0)
   }
 
   v_to_confidence_map <- setNames(rules$confidence, rules$rule)
   v_to_confidence <- function(name) {
-    if_else(name %in% names(v_to_confidence_map), v_to_confidence_map[name],0)
+    ifelse(name %in% names(v_to_confidence_map), v_to_confidence_map[name],0)
   }
 
   # Sewt color scale with confidence
   c_scale <- colorRamp(c('white','red'))
-  V(g)$color <- apply(c_scale(v_to_confidence(V(g)$name)), 1, function(x) rgb(x[1]/255,x[2]/255,x[3]/255, alpha=0.8) )
+  V(g)$color <- apply(c_scale(v_to_confidence(V(g)$name)), 1,
+                      function(x) rgb(x[1]/255,x[2]/255,x[3]/255, alpha=0.8) )
 
   # Mute labels of rule-node
-  modify_label <- function(x) {if_else(str_detect(x,"^Rule "), "", x)}
+  modify_label <- function(x) {
+    ifelse(stringr::str_detect(x,"^Rule "), "", x)
+  }
 
   param <- list(
     edge.arrow.size    = 0.4,
