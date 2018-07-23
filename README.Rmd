@@ -3,7 +3,7 @@ title: "inspectDF: R package for getting inspected rules as data.frame"
 author: Satoshi Kato (@katokohaku)
 output: 
   html_document:
-    keep_md: no
+    keep_md: yes
   md_document:
     variant: markdown_github
 ---
@@ -11,10 +11,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  # comment = "#>",
   message = FALSE
 )
-library(mvtnorm)
 ```
 
 # Overview
@@ -110,7 +108,7 @@ glo.apriori %>%
 
 Similar to original plot.rules with igraph in arules package, each rule size represents **support value**. This size can be adjusted by `adujust.support.size` in plot functions. 
 
-```{r usecase.adjust.rule.size}
+```{r usecase.adjust.rule}
 require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(RHS, pattern = "yogurt")) %>%
