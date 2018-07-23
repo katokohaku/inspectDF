@@ -1,16 +1,7 @@
----
-title: "inspectDF: R package for getting inspected rules as data.frame"
-author: Satoshi Kato (@katokohaku)
-output: 
-  html_document:
-    keep_md: yes
-  md_document:
-    variant: markdown_github
----
+# inspectDF: R package for getting inspected rules as data.frame"
+Satoshi Kato (@katokohaku)
 
-
-
-# Overview
+## Overview
 
 Getting inspected rules as data.frame.
 
