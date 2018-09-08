@@ -37,7 +37,7 @@ toEdges <- function(rules.data.frame, sep = ","){
     dplyr::select(-RHS) %>%
     dplyr::rename(from = LHS, to = rule)
 
-  edges.all <- dplyr::bind_rows(lhs_rule_edges, rule_rhs_edges)
+  edges.all <- dplyr::bind_rows(rule_rhs_edges, lhs_rule_edges)
 
   class(edges.all) <- c(class(edges.all), "edges.from.rules")
   invisible(edges.all)
