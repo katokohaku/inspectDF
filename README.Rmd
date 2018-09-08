@@ -73,6 +73,10 @@ Of cource, we could get data.frame object as side effect of `cat()` on the last 
 
 **!!Don't run following codes with many rules!!**
 ```{r original.inspect}
+data(Groceries)
+params <- list(confidence=0.001, support=0.001, maxlen=7, minlen=2)
+glo.apriori <- apriori(Groceries, parameter = params)
+print(glo.apriori)
 glo.inspect  <- glo.apriori %>% head(10) %>% inspect()
 glo.inspect %>% str
 ```
@@ -124,4 +128,18 @@ rules.lhs %>% plotRuleGraph(label = "adjusted rule size",
 par(mfrow = c(1,1))
 
 ```
+```{r usecase.graph.df}
+require(stringr)
+rules.lhs  <- glo.inspectDF %>% 
+  filter(str_detect(RHS, pattern = "yogurt")) %>%
+  arrange(confidence, lift) %>%
+  filter(n > 1) %>% 
+  head(15)
+
+rules.lhs
+
+edges.lhs <- rules.lhs %>% inspectDF::toEdges()
+edges.lhs
+```
+
 

@@ -29,12 +29,12 @@ toEdges <- function(rules.data.frame, sep = ","){
   }
 
   rule_rhs_edges <- rules.data.frame %>%
-    dplyr::select(rule, RHS) %>%
+    dplyr::select(-LHS) %>%
     dplyr::rename(from = rule, to = RHS)
 
   lhs_rule_edges <- rules.data.frame %>%
     tidyr::separate_rows(LHS, sep = paste0("\\s*\\",sep,"\\s*")) %>%
-    dplyr::select(LHS, rule) %>%
+    dplyr::select(-RHS) %>%
     dplyr::rename(from = LHS, to = rule)
 
   edges.all <- dplyr::bind_rows(lhs_rule_edges, rule_rhs_edges)
