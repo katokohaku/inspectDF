@@ -32,7 +32,7 @@ inspectDF <- function(rules, sep = ","){
     dplyr::mutate(rule = paste("Rule", dplyr::row_number()),
                   LHS = as.character(LHS),
                   RHS = as.character(RHS),
-                  n = stringr::str_count(LHS, pattern = sep) +1) %>%
+                  n.lhs = stringr::str_count(LHS, pattern = sep) +1) %>%
     dplyr::select(rule, LHS, RHS, n, dplyr::everything())
 
   return(rules)

@@ -119,13 +119,12 @@ rules.lhs  <- glo.inspectDF %>%
   filter(n > 1) %>% 
   head(15)
 
-par(mfrow = c(1,2))
-set.seed(0)
+s=5
+set.seed(s)
 rules.lhs %>% plotRuleGraph(label = "default")
 set.seed(0)
 rules.lhs %>% plotRuleGraph(label = "adjusted rule size", 
                             adujust.support.size = 4000)
-par(mfrow = c(1,1))
 
 ```
 ```{r usecase.graph.df}
