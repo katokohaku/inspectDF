@@ -35,7 +35,7 @@ glo.apriori <- apriori(Groceries, parameter = params, control = list(verbose=FAL
 print(glo.apriori)
 
 glo.inspectDF  <- inspectDF(glo.apriori)
-glo.inspectDF %>% str
+glo.inspectDF %>% str(vec.len = 3)
 ```
 
 **InspectDF** also provides a plot.igraph wrapper utility.
@@ -95,8 +95,11 @@ require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(LHS, pattern = "yogurt|sausage")) %>%
   arrange(confidence, lift) %>%
-  filter(n > 1) %>% 
-  head()
+  filter(n.lhs > 1) %>% 
+  head(5)
+
+rules.lhs
+
 ```
 
 By default, rule strings are split by separater `","`. But, items sometimes contain separater characters e.g. **[IUPAC of DHA](https://pubchem.ncbi.nlm.nih.gov/compound/Docosahexaenoic_acid#section=IUPAC-Name)**. In such case, user can change rule-separater freely `sep = string`.
@@ -104,7 +107,7 @@ By default, rule strings are split by separater `","`. But, items sometimes cont
 ```{r usecase.sep}
 glo.apriori %>% 
   inspectDF(sep = "###") %>% 
-  filter(n >3) %>% 
+  filter(n.lhs >3) %>% 
   select(2:3) %>% 
   head()
 ```
@@ -116,7 +119,7 @@ require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(RHS, pattern = "yogurt")) %>%
   arrange(confidence, lift) %>%
-  filter(n > 1) %>% 
+  filter(n.lhs > 1) %>% 
   head(15)
 
 s=5
@@ -132,7 +135,7 @@ require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(RHS, pattern = "yogurt")) %>%
   arrange(confidence, lift) %>%
-  filter(n > 1) %>% 
+  filter(n.lhs > 1) %>% 
   head(15)
 
 rules.lhs

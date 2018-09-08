@@ -31,16 +31,16 @@ print(glo.apriori)
 #> set of 40943 rules
 
 glo.inspectDF  <- inspectDF(glo.apriori)
-glo.inspectDF %>% str
+glo.inspectDF %>% str(vec.len = 3)
 #> 'data.frame':	40943 obs. of  8 variables:
-#>  $ rule      : chr  "Rule 1" "Rule 2" "Rule 3" "Rule 4" ...
-#>  $ LHS       : chr  "whole milk" "other vegetables" "other vegetables" "rolls/buns" ...
-#>  $ RHS       : chr  "sparkling wine" "artif. sweetener" "bathroom cleaner" "nuts/prunes" ...
-#>  $ n         : num  1 1 1 1 1 1 1 1 1 1 ...
-#>  $ support   : num  0.00102 0.00102 0.00102 0.00102 0.00102 ...
-#>  $ confidence: num  0.00398 0.00525 0.00525 0.00553 0.00583 ...
-#>  $ lift      : num  0.712 1.615 1.914 1.647 1.024 ...
-#>  $ count     : num  10 10 10 10 10 10 10 10 10 10 ...
+#>  $ rule      : chr  "Rule 1" "Rule 2" "Rule 3" ...
+#>  $ LHS       : chr  "whole milk" "other vegetables" "other vegetables" ...
+#>  $ RHS       : chr  "sparkling wine" "artif. sweetener" "bathroom cleaner" ...
+#>  $ n.lhs     : num  1 1 1 1 1 1 1 1 ...
+#>  $ support   : num  0.00102 0.00102 0.00102 0.00102 ...
+#>  $ confidence: num  0.00398 0.00525 0.00525 0.00553 ...
+#>  $ lift      : num  0.712 1.615 1.914 1.647 ...
+#>  $ count     : num  10 10 10 10 10 10 10 10 ...
 ```
 
 **InspectDF** also provides a plot.igraph wrapper utility.
@@ -157,8 +157,22 @@ require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(LHS, pattern = "yogurt|sausage")) %>%
   arrange(confidence, lift) %>%
-  filter(n > 1) %>% 
-  head()
+  filter(n.lhs > 1) %>% 
+  head(5)
+
+rules.lhs
+#>        rule               LHS                    RHS n.lhs     support
+#> 1   Rule 97 whole milk,yogurt               UHT-milk     2 0.001016777
+#> 2   Rule 98 whole milk,yogurt         red/blush wine     2 0.001016777
+#> 3   Rule 99 whole milk,yogurt house keeping products     2 0.001016777
+#> 4  Rule 100 whole milk,yogurt             liver loaf     2 0.001016777
+#> 5 Rule 7175 whole milk,yogurt            chewing gum     2 0.001118454
+#>   confidence      lift count
+#> 1 0.01814882 0.5425339    10
+#> 2 0.01814882 0.9444108    10
+#> 3 0.01814882 2.1767518    10
+#> 4 0.01814882 3.5698730    10
+#> 5 0.01996370 0.9485170    11
 ```
 
 By default, rule strings are split by separater `","`. But, items sometimes contain separater characters e.g. **[IUPAC of DHA](https://pubchem.ncbi.nlm.nih.gov/compound/Docosahexaenoic_acid#section=IUPAC-Name)**. In such case, user can change rule-separater freely `sep = string`.
@@ -167,7 +181,7 @@ By default, rule strings are split by separater `","`. But, items sometimes cont
 ```r
 glo.apriori %>% 
   inspectDF(sep = "###") %>% 
-  filter(n >3) %>% 
+  filter(n.lhs >3) %>% 
   select(2:3) %>% 
   head()
 #>                                                        LHS         RHS
@@ -187,7 +201,7 @@ require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(RHS, pattern = "yogurt")) %>%
   arrange(confidence, lift) %>%
-  filter(n > 1) %>% 
+  filter(n.lhs > 1) %>% 
   head(15)
 
 s=5
@@ -198,7 +212,7 @@ rules.lhs %>% plotRuleGraph(label = "default")
 ![](README_files/figure-html/usecase.adjust.rule-1.png)<!-- -->
 
 ```r
-set.seed(s)
+set.seed(0)
 rules.lhs %>% plotRuleGraph(label = "adjusted rule size", 
                             adujust.support.size = 4000)
 ```
@@ -210,91 +224,137 @@ require(stringr)
 rules.lhs  <- glo.inspectDF %>% 
   filter(str_detect(RHS, pattern = "yogurt")) %>%
   arrange(confidence, lift) %>%
-  filter(n > 1) %>% 
+  filter(n.lhs > 1) %>% 
   head(15)
 
 rules.lhs
-#>          rule                         LHS    RHS n     support confidence
-#> 1   Rule 7989   canned beer,shopping bags yogurt 2 0.001118454 0.09821429
-#> 2  Rule 31170           soda,bottled beer yogurt 2 0.002135231 0.12574850
-#> 3  Rule 13529   frankfurter,shopping bags yogurt 2 0.001220132 0.14814815
-#> 4  Rule 20442        coffee,shopping bags yogurt 2 0.001423488 0.15217391
-#> 5  Rule 26699      rolls/buns,canned beer yogurt 2 0.001728521 0.15315315
-#> 6  Rule 31223            soda,canned beer yogurt 2 0.002135231 0.15441176
-#> 7  Rule 29426                   pork,soda yogurt 2 0.001931876 0.16239316
-#> 8  Rule 22978            soda,salty snack yogurt 2 0.001525165 0.16304348
-#> 9   Rule 2458      margarine,bottled beer yogurt 2 0.001016777 0.16666667
-#> 10 Rule 32635     rolls/buns,bottled beer yogurt 2 0.002338587 0.17164179
-#> 11 Rule 38217          soda,shopping bags yogurt 2 0.004270463 0.17355372
-#> 12 Rule 13816 whole milk,processed cheese yogurt 2 0.001220132 0.17391304
-#> 13  Rule 9106         citrus fruit,coffee yogurt 2 0.001118454 0.17460317
-#> 14 Rule 20625     chocolate,shopping bags yogurt 2 0.001423488 0.17500000
-#> 15  Rule 2605           waffles,chocolate yogurt 2 0.001016777 0.17543860
-#>         lift count
-#> 1  0.7040361    11
-#> 2  0.9014115    21
-#> 3  1.0619803    12
-#> 4  1.0908385    14
-#> 5  1.0978581    17
-#> 6  1.1068803    21
-#> 7  1.1640938    19
-#> 8  1.1687555    15
-#> 9  1.1947279    10
-#> 10 1.2303914    23
-#> 11 1.2440968    42
-#> 12 1.2466726    12
-#> 13 1.2516197    11
-#> 14 1.2544643    14
-#> 15 1.2576083    10
+#>          rule                         LHS    RHS n.lhs     support
+#> 1   Rule 7989   canned beer,shopping bags yogurt     2 0.001118454
+#> 2  Rule 31170           soda,bottled beer yogurt     2 0.002135231
+#> 3  Rule 13529   frankfurter,shopping bags yogurt     2 0.001220132
+#> 4  Rule 20442        coffee,shopping bags yogurt     2 0.001423488
+#> 5  Rule 26699      rolls/buns,canned beer yogurt     2 0.001728521
+#> 6  Rule 31223            soda,canned beer yogurt     2 0.002135231
+#> 7  Rule 29426                   pork,soda yogurt     2 0.001931876
+#> 8  Rule 22978            soda,salty snack yogurt     2 0.001525165
+#> 9   Rule 2458      margarine,bottled beer yogurt     2 0.001016777
+#> 10 Rule 32635     rolls/buns,bottled beer yogurt     2 0.002338587
+#> 11 Rule 38217          soda,shopping bags yogurt     2 0.004270463
+#> 12 Rule 13816 whole milk,processed cheese yogurt     2 0.001220132
+#> 13  Rule 9106         citrus fruit,coffee yogurt     2 0.001118454
+#> 14 Rule 20625     chocolate,shopping bags yogurt     2 0.001423488
+#> 15  Rule 2605           waffles,chocolate yogurt     2 0.001016777
+#>    confidence      lift count
+#> 1  0.09821429 0.7040361    11
+#> 2  0.12574850 0.9014115    21
+#> 3  0.14814815 1.0619803    12
+#> 4  0.15217391 1.0908385    14
+#> 5  0.15315315 1.0978581    17
+#> 6  0.15441176 1.1068803    21
+#> 7  0.16239316 1.1640938    19
+#> 8  0.16304348 1.1687555    15
+#> 9  0.16666667 1.1947279    10
+#> 10 0.17164179 1.2303914    23
+#> 11 0.17355372 1.2440968    42
+#> 12 0.17391304 1.2466726    12
+#> 13 0.17460317 1.2516197    11
+#> 14 0.17500000 1.2544643    14
+#> 15 0.17543860 1.2576083    10
 
 edges.lhs <- rules.lhs %>% inspectDF::toEdges()
 edges.lhs
-#>                from         to n     support confidence      lift count
-#> 1         Rule 7989     yogurt 2 0.001118454 0.09821429 0.7040361    11
-#> 2        Rule 31170     yogurt 2 0.002135231 0.12574850 0.9014115    21
-#> 3        Rule 13529     yogurt 2 0.001220132 0.14814815 1.0619803    12
-#> 4        Rule 20442     yogurt 2 0.001423488 0.15217391 1.0908385    14
-#> 5        Rule 26699     yogurt 2 0.001728521 0.15315315 1.0978581    17
-#> 6        Rule 31223     yogurt 2 0.002135231 0.15441176 1.1068803    21
-#> 7        Rule 29426     yogurt 2 0.001931876 0.16239316 1.1640938    19
-#> 8        Rule 22978     yogurt 2 0.001525165 0.16304348 1.1687555    15
-#> 9         Rule 2458     yogurt 2 0.001016777 0.16666667 1.1947279    10
-#> 10       Rule 32635     yogurt 2 0.002338587 0.17164179 1.2303914    23
-#> 11       Rule 38217     yogurt 2 0.004270463 0.17355372 1.2440968    42
-#> 12       Rule 13816     yogurt 2 0.001220132 0.17391304 1.2466726    12
-#> 13        Rule 9106     yogurt 2 0.001118454 0.17460317 1.2516197    11
-#> 14       Rule 20625     yogurt 2 0.001423488 0.17500000 1.2544643    14
-#> 15        Rule 2605     yogurt 2 0.001016777 0.17543860 1.2576083    10
-#> 16      canned beer  Rule 7989 2 0.001118454 0.09821429 0.7040361    11
-#> 17    shopping bags  Rule 7989 2 0.001118454 0.09821429 0.7040361    11
-#> 18             soda Rule 31170 2 0.002135231 0.12574850 0.9014115    21
-#> 19     bottled beer Rule 31170 2 0.002135231 0.12574850 0.9014115    21
-#> 20      frankfurter Rule 13529 2 0.001220132 0.14814815 1.0619803    12
-#> 21    shopping bags Rule 13529 2 0.001220132 0.14814815 1.0619803    12
-#> 22           coffee Rule 20442 2 0.001423488 0.15217391 1.0908385    14
-#> 23    shopping bags Rule 20442 2 0.001423488 0.15217391 1.0908385    14
-#> 24       rolls/buns Rule 26699 2 0.001728521 0.15315315 1.0978581    17
-#> 25      canned beer Rule 26699 2 0.001728521 0.15315315 1.0978581    17
-#> 26             soda Rule 31223 2 0.002135231 0.15441176 1.1068803    21
-#> 27      canned beer Rule 31223 2 0.002135231 0.15441176 1.1068803    21
-#> 28             pork Rule 29426 2 0.001931876 0.16239316 1.1640938    19
-#> 29             soda Rule 29426 2 0.001931876 0.16239316 1.1640938    19
-#> 30             soda Rule 22978 2 0.001525165 0.16304348 1.1687555    15
-#> 31      salty snack Rule 22978 2 0.001525165 0.16304348 1.1687555    15
-#> 32        margarine  Rule 2458 2 0.001016777 0.16666667 1.1947279    10
-#> 33     bottled beer  Rule 2458 2 0.001016777 0.16666667 1.1947279    10
-#> 34       rolls/buns Rule 32635 2 0.002338587 0.17164179 1.2303914    23
-#> 35     bottled beer Rule 32635 2 0.002338587 0.17164179 1.2303914    23
-#> 36             soda Rule 38217 2 0.004270463 0.17355372 1.2440968    42
-#> 37    shopping bags Rule 38217 2 0.004270463 0.17355372 1.2440968    42
-#> 38       whole milk Rule 13816 2 0.001220132 0.17391304 1.2466726    12
-#> 39 processed cheese Rule 13816 2 0.001220132 0.17391304 1.2466726    12
-#> 40     citrus fruit  Rule 9106 2 0.001118454 0.17460317 1.2516197    11
-#> 41           coffee  Rule 9106 2 0.001118454 0.17460317 1.2516197    11
-#> 42        chocolate Rule 20625 2 0.001423488 0.17500000 1.2544643    14
-#> 43    shopping bags Rule 20625 2 0.001423488 0.17500000 1.2544643    14
-#> 44          waffles  Rule 2605 2 0.001016777 0.17543860 1.2576083    10
-#> 45        chocolate  Rule 2605 2 0.001016777 0.17543860 1.2576083    10
+#>                from         to n.lhs     support confidence      lift
+#> 1         Rule 7989     yogurt     2 0.001118454 0.09821429 0.7040361
+#> 2        Rule 31170     yogurt     2 0.002135231 0.12574850 0.9014115
+#> 3        Rule 13529     yogurt     2 0.001220132 0.14814815 1.0619803
+#> 4        Rule 20442     yogurt     2 0.001423488 0.15217391 1.0908385
+#> 5        Rule 26699     yogurt     2 0.001728521 0.15315315 1.0978581
+#> 6        Rule 31223     yogurt     2 0.002135231 0.15441176 1.1068803
+#> 7        Rule 29426     yogurt     2 0.001931876 0.16239316 1.1640938
+#> 8        Rule 22978     yogurt     2 0.001525165 0.16304348 1.1687555
+#> 9         Rule 2458     yogurt     2 0.001016777 0.16666667 1.1947279
+#> 10       Rule 32635     yogurt     2 0.002338587 0.17164179 1.2303914
+#> 11       Rule 38217     yogurt     2 0.004270463 0.17355372 1.2440968
+#> 12       Rule 13816     yogurt     2 0.001220132 0.17391304 1.2466726
+#> 13        Rule 9106     yogurt     2 0.001118454 0.17460317 1.2516197
+#> 14       Rule 20625     yogurt     2 0.001423488 0.17500000 1.2544643
+#> 15        Rule 2605     yogurt     2 0.001016777 0.17543860 1.2576083
+#> 16      canned beer  Rule 7989     2 0.001118454 0.09821429 0.7040361
+#> 17    shopping bags  Rule 7989     2 0.001118454 0.09821429 0.7040361
+#> 18             soda Rule 31170     2 0.002135231 0.12574850 0.9014115
+#> 19     bottled beer Rule 31170     2 0.002135231 0.12574850 0.9014115
+#> 20      frankfurter Rule 13529     2 0.001220132 0.14814815 1.0619803
+#> 21    shopping bags Rule 13529     2 0.001220132 0.14814815 1.0619803
+#> 22           coffee Rule 20442     2 0.001423488 0.15217391 1.0908385
+#> 23    shopping bags Rule 20442     2 0.001423488 0.15217391 1.0908385
+#> 24       rolls/buns Rule 26699     2 0.001728521 0.15315315 1.0978581
+#> 25      canned beer Rule 26699     2 0.001728521 0.15315315 1.0978581
+#> 26             soda Rule 31223     2 0.002135231 0.15441176 1.1068803
+#> 27      canned beer Rule 31223     2 0.002135231 0.15441176 1.1068803
+#> 28             pork Rule 29426     2 0.001931876 0.16239316 1.1640938
+#> 29             soda Rule 29426     2 0.001931876 0.16239316 1.1640938
+#> 30             soda Rule 22978     2 0.001525165 0.16304348 1.1687555
+#> 31      salty snack Rule 22978     2 0.001525165 0.16304348 1.1687555
+#> 32        margarine  Rule 2458     2 0.001016777 0.16666667 1.1947279
+#> 33     bottled beer  Rule 2458     2 0.001016777 0.16666667 1.1947279
+#> 34       rolls/buns Rule 32635     2 0.002338587 0.17164179 1.2303914
+#> 35     bottled beer Rule 32635     2 0.002338587 0.17164179 1.2303914
+#> 36             soda Rule 38217     2 0.004270463 0.17355372 1.2440968
+#> 37    shopping bags Rule 38217     2 0.004270463 0.17355372 1.2440968
+#> 38       whole milk Rule 13816     2 0.001220132 0.17391304 1.2466726
+#> 39 processed cheese Rule 13816     2 0.001220132 0.17391304 1.2466726
+#> 40     citrus fruit  Rule 9106     2 0.001118454 0.17460317 1.2516197
+#> 41           coffee  Rule 9106     2 0.001118454 0.17460317 1.2516197
+#> 42        chocolate Rule 20625     2 0.001423488 0.17500000 1.2544643
+#> 43    shopping bags Rule 20625     2 0.001423488 0.17500000 1.2544643
+#> 44          waffles  Rule 2605     2 0.001016777 0.17543860 1.2576083
+#> 45        chocolate  Rule 2605     2 0.001016777 0.17543860 1.2576083
+#>    count
+#> 1     11
+#> 2     21
+#> 3     12
+#> 4     14
+#> 5     17
+#> 6     21
+#> 7     19
+#> 8     15
+#> 9     10
+#> 10    23
+#> 11    42
+#> 12    12
+#> 13    11
+#> 14    14
+#> 15    10
+#> 16    11
+#> 17    11
+#> 18    21
+#> 19    21
+#> 20    12
+#> 21    12
+#> 22    14
+#> 23    14
+#> 24    17
+#> 25    17
+#> 26    21
+#> 27    21
+#> 28    19
+#> 29    19
+#> 30    15
+#> 31    15
+#> 32    10
+#> 33    10
+#> 34    23
+#> 35    23
+#> 36    42
+#> 37    42
+#> 38    12
+#> 39    12
+#> 40    11
+#> 41    11
+#> 42    14
+#> 43    14
+#> 44    10
+#> 45    10
 ```
 
 
